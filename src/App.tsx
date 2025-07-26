@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+ import { useState } from 'react';
+import { TextInput } from './components/TextInput/TextInput';
+import { StatsDisplay } from './components/StatsDisplay/StatsDisplay';
+import { type TextStats } from './types';
+
+export function App() {
+  const [text, setText] = useState('');
+
+  const calculateStats = (input: string): TextStats => {
+    const characterCount = input.length;
+    const wordCount = input.trim() ? input.trim().split(/\s+/).filter(Boolean).length: 0 ;
+    const readingTime = Math.ceil(wordCount / 200); // Assuming 200 WPM
+
+    return {
+      characterCount,
+      wordCount,
+      readingTime,
+    };
+  };
+
+  const stats = calculateStats(text);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <h1>Text Analyzer</h1>
+      <TextInput onTextChange={setText} placeholder="Type something..." />
+      <StatsDisplay stats={stats} showReadingTime={true} />
+    </div>
+  );
 }
-
-export default App
